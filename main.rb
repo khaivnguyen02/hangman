@@ -1,3 +1,5 @@
+require 'json'
+
 class Hangman
   def initialize
     @word = select_word
@@ -53,7 +55,34 @@ class Hangman
       puts "Congratulations! You guessed the word!"
     end
   end
+
+  def save_game
+    game_state = {
+      word: @word,
+      guessed_letters: @guessed_letters
+      incorrect_guesses: @incorrect_guesses
+    }
+    File.open('hangman_save.json', 'w') do |file|
+      file.puts JSON.dump(game_state)
+    end
+    puts "Game saved successfully!"
+  end
+
+  def load_game
+    if File.exist?('hangman_save.json')
+      game_state = JSON.parse(File.read('hangman_save.json'))
+      @word = game_state['word']
+      @guessed_letters = game_state['guessed_letters']
+      @incorrect_guesses = game_state['incorrect_guesses']
+      puts "Game loaded successfully"
+      true
+    else
+      puts "No saved game found."
+      false
+    end
+  end
 end
 
 game = Hangman.new
 game.play
+
