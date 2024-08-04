@@ -1,17 +1,14 @@
 class Hangman
   def initialize
-    @dictionary = load_dictionary
-    @secret_word = select_word
+    @word = select_word
     @guessed_letters = []
-    @remaining_guesses = 6
-  end
-
-  def load_dictionary
-    # TODO: Implement dictionary loading
+    @incorrect_guesses = 0
+    @max_guesses = 6
   end
 
   def select_word
-    # TODO: Implement word selection
+    word_list = File.readlines('google-10000-english-no-swears.txt').map(&:chomp)
+    word_list.select { |word| word.length.between?(5, 12) }.sample
   end
 
   def play
@@ -20,4 +17,4 @@ class Hangman
 end
 
 game = Hangman.new
-game.play
+p game.select_word
