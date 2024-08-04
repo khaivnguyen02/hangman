@@ -33,6 +33,26 @@ class Hangman
       puts "Sorry, that letter is not in the word."
     end
   end
+
+  def game_over?
+    @incorrect_guesses >= @max_guesses || !display_word.include?('_')
+  end
+
+  def play
+    until game_over?
+      display_game_state
+      print "\nEnter a letter to guess: "
+      guess = gets.chomp
+      guessed_letter(guess)
+    end
+
+    display_game_state
+    if @incorrect_guesses >= @max_guesses
+      puts "Sorry, you lost! The word was: #{@word}"
+    else
+      puts "Congratulations! You guessed the word!"
+    end
+  end
 end
 
 game = Hangman.new
