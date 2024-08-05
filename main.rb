@@ -43,9 +43,21 @@ class Hangman
   def play
     until game_over?
       display_game_state
-      print "\nEnter a letter to guess: "
-      guess = gets.chomp
-      guessed_letter(guess)
+      print "\nEnter a letter to guess, 'save' to save the game, or 'quit' to exit: "
+      input = gets.chomp.downcase
+      
+      case input
+      when 'save'
+        save_game
+        print 'Game saved. Do you want to continue playing? (y/n): '
+        continue = gets.chomp.downcase
+        return unless continue == 'y'
+      when 'quit'
+        puts 'Thanks for playing!'
+        return
+      else
+        guessed_letter(input)
+      end
     end
 
     display_game_state
@@ -59,7 +71,7 @@ class Hangman
   def save_game
     game_state = {
       word: @word,
-      guessed_letters: @guessed_letters
+      guessed_letters: @guessed_letters,
       incorrect_guesses: @incorrect_guesses
     }
     File.open('hangman_save.json', 'w') do |file|
@@ -83,6 +95,18 @@ class Hangman
   end
 end
 
-game = Hangman.new
-game.play
+def start_game
+  puts 'Welcome to Hangman!'
+  print 'Would you like to start a (n)ew game or (l)oad game? '
+  choice = gets.chomp.downcase
 
+  game = Hangman.new
+
+  if choice == 'l'
+    game.load_game
+  end
+
+  game.play
+end
+
+start_game
